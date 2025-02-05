@@ -1,35 +1,24 @@
-// src/App.js
-import React from "react";
-import Header from "./components/Header";
-import Hero from "./components/Hero";
-import Services from "./components/Services";
-import About from "./components/About";
-import Footer from "./components/Footer";
-import PlotSection from "./components/PlotSection";
-import Test from "./components/Test";
+// App.js
+import { Hero } from "./components/Hero";
+import { Services } from "./components/Services";
+import { Contact } from "./components/Contact";
+import { Header } from "./components/Header";
+import { Footer } from "./components/Footer";
 
-const App = () => {
+export default function App() {
   return (
-    <div>
-      <Test />
+    <div
+      style={{
+        background: "#000",
+        color: "#fff",
+        minHeight: "100vh",
+        position: "relative",
+      }}>
       <Header />
-      <section id="hero">
-        <Hero />
-      </section>
-      <section id="plot">
-        <PlotSection />
-      </section>
-      <section id="services">
-        <Services />
-      </section>
-      <section id="about">
-        <About />
-      </section>
-      <section id="contact">
-        <Footer />
-      </section>
+      <Hero />
+      <Services />
+      <Contact />
+      <Footer />
     </div>
   );
-};
-
-export default App;
+}

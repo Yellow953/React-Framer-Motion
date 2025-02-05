@@ -1,97 +1,95 @@
-// src/components/Services.js
-import React from "react";
-import { motion } from "framer-motion";
+import { motion, useTransform } from "framer-motion";
+import { useScroll } from "framer-motion";
+import { useRef, useEffect, useState } from "react";
 
-const Services = () => {
+const services = [
+  {
+    title: "AI Solutions",
+    icon: "🤖",
+    bg: "#1a1a1a",
+  },
+  {
+    title: "Mobile Apps",
+    icon: "📱",
+    bg: "#2a2a2a",
+  },
+  {
+    title: "Web Platforms",
+    icon: "💻",
+    bg: "#3a3a3a",
+  },
+];
+
+export const Services = () => {
+  const ref = useRef();
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+
   return (
     <motion.section
-      initial={{ opacity: 0 }}
-      whileInView={{ opacity: 1 }}
-      transition={{ duration: 1.2 }}
-      style={styles.services}>
-      <h2 style={styles.title}>Our Services</h2>
-      <div style={styles.serviceContainer}>
+      ref={ref}
+      style={{
+        minHeight: isMobile ? "100vh" : "300vh",
+        position: "relative",
+      }}>
+      {services.map((service, index) => (
         <motion.div
-          className="service-item"
-          whileHover={{ scale: 1.1, rotate: 5 }}
-          transition={{ type: "spring", stiffness: 300 }}
-          style={styles.serviceItem}>
-          <img
-            src="https://images.unsplash.com/photo-1593642532973-d31b6557fa68" // Laptop Image
-            alt="Laptop"
-            style={styles.image}
-          />
-          <h3>Custom Development</h3>
-          <p>
-            We build scalable, high-performance applications tailored to your
-            needs.
-          </p>
-        </motion.div>
+          key={index}
+          style={{
+            height: "100vh",
+            display: "flex",
+            flexDirection: isMobile ? "column" : "row",
+            gap: "2rem",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: "0 5%",
+          }}>
+          <motion.div
+            initial={isMobile ? { opacity: 1 } : { opacity: 0, x: -100 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ margin: isMobile ? "0px" : "-30% 0px" }}
+            style={{
+              flex: 1,
+              textAlign: isMobile ? "center" : "left",
+              order: isMobile ? 2 : 1,
+            }}>
+            <h2
+              style={{
+                fontSize: isMobile ? "2.5rem" : "4rem",
+                color: "#FFD700",
+              }}>
+              {service.title}
+            </h2>
+            <p
+              style={{
+                fontSize: isMobile ? "1.2rem" : "1.5rem",
+                marginTop: "2rem",
+              }}>
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+            </p>
+          </motion.div>
 
-        <motion.div
-          className="service-item"
-          whileHover={{ scale: 1.1, rotate: -5 }}
-          transition={{ type: "spring", stiffness: 300 }}
-          style={styles.serviceItem}>
-          <img
-            src="https://images.unsplash.com/photo-1581325387588-53e28f49f69b" // AI Image
-            alt="AI"
-            style={styles.image}
-          />
-          <h3>Artificial Intelligence</h3>
-          <p>
-            Leverage AI to optimize your business processes and decision-making.
-          </p>
+          <motion.div
+            initial={{ scale: 0.5 }}
+            whileInView={{ scale: 1 }}
+            viewport={{ margin: isMobile ? "0px" : "-30% 0px" }}
+            style={{
+              flex: 1,
+              display: "flex",
+              justifyContent: "center",
+              fontSize: isMobile ? "8rem" : "20rem",
+              order: isMobile ? 1 : 2,
+            }}>
+            {service.icon}
+          </motion.div>
         </motion.div>
-
-        <motion.div
-          className="service-item"
-          whileHover={{ scale: 1.1, rotate: 10 }}
-          transition={{ type: "spring", stiffness: 300 }}
-          style={styles.serviceItem}>
-          <img
-            src="https://images.unsplash.com/photo-1603383217594-4586e4c9c8b9" // Mobile Image
-            alt="Mobile"
-            style={styles.image}
-          />
-          <h3>Mobile Solutions</h3>
-          <p>Engage your customers through top-notch mobile app development.</p>
-        </motion.div>
-      </div>
+      ))}
     </motion.section>
   );
 };
-
-const styles = {
-  services: {
-    padding: "60px 20px",
-    backgroundColor: "#111",
-    color: "#fff",
-    textAlign: "center",
-  },
-  title: {
-    fontSize: "2.5rem",
-    marginBottom: "30px",
-  },
-  serviceContainer: {
-    display: "flex",
-    justifyContent: "space-around",
-    flexWrap: "wrap",
-  },
-  serviceItem: {
-    width: "30%",
-    backgroundColor: "#222",
-    padding: "20px",
-    margin: "10px",
-    borderRadius: "10px",
-    textAlign: "center",
-    boxShadow: "0 8px 15px rgba(0, 0, 0, 0.3)",
-  },
-  image: {
-    width: "100%",
-    height: "auto",
-    borderRadius: "8px",
-  },
-};
-
-export default Services;

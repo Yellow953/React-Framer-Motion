@@ -1,69 +1,110 @@
-import React from "react";
-import { motion, useViewportScroll, useTransform } from "framer-motion";
+// components/Hero.jsx
+import { motion, useScroll, useTransform } from "framer-motion";
+import { useRef } from "react";
 
-const Hero = () => {
-  const { scrollYProgress } = useViewportScroll();
+export const Hero = () => {
+  const ref = useRef();
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start start", "end start"],
+  });
 
-  // Background zoom effect
-  const scale = useTransform(scrollYProgress, [0, 0.5], [1, 1.3]);
-
-  // Text opacity for different states
-  const opacity1 = useTransform(scrollYProgress, [0, 0.2, 0.4], [1, 0, 0]);
-  const opacity2 = useTransform(scrollYProgress, [0.3, 0.5, 0.7], [0, 1, 0]);
-  const opacity3 = useTransform(scrollYProgress, [0.6, 0.8, 1], [0, 1, 1]);
+  const scale = useTransform(scrollYProgress, [0, 1], [1, 10]);
+  const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
+  const y = useTransform(scrollYProgress, [0, 1], [0, -300]);
 
   return (
-    <section style={styles.hero}>
-      {/* Background Zoom Effect */}
-      <motion.div style={{ ...styles.background, scale }} />
+    <motion.section
+      ref={ref}
+      style={{
+        height: "200vh",
+        position: "relative",
+        overflow: "hidden",
+      }}>
+      <motion.div
+        style={{
+          position: "sticky",
+          top: 0,
+          height: "100vh",
+          scale,
+          opacity,
+          y,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          background: "radial-gradient(circle at center, #000 0%, #111 100%)",
+        }}>
+        <div style={{ position: "relative", zIndex: 2 }}>
+          <motion.h1
+            style={{
+              fontSize: "clamp(2rem, 12vw, 15rem)",
+              padding: "0 5%",
+              color: "#FFD700", // Ensure yellow color
+              textAlign: "center",
+              lineHeight: 1,
+              textTransform: "uppercase",
+              letterSpacing: "-0.05em",
+              margin: 0,
+              position: "relative",
+              zIndex: 2, // Add z-index
+            }}>
+            Yellow
+            <motion.span
+              style={{
+                display: "block",
+                color: "#fff",
+                WebkitTextStroke: "2px #FFD700",
+                paddingLeft: "2vw",
+              }}>
+              Tech
+            </motion.span>
+          </motion.h1>
+        </div>
 
-      {/* Text Changes as you Scroll */}
-      <div style={styles.content}>
-        <motion.h1 style={{ ...styles.title, opacity: opacity1 }}>
-          Welcome to YellowTech
-        </motion.h1>
-        <motion.h1 style={{ ...styles.title, opacity: opacity2 }}>
-          We Build Future-Ready Software
-        </motion.h1>
-        <motion.h1 style={{ ...styles.title, opacity: opacity3 }}>
-          AI-Powered Solutions for You
-        </motion.h1>
-      </div>
-    </section>
+        {/* Background elements for depth */}
+        <motion.div
+          style={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            fontSize: "30rem",
+            opacity: 0.1,
+          }}
+          animate={{ rotate: 360 }}
+          transition={{ duration: 40, repeat: Infinity, ease: "linear" }}>
+          🖥️
+        </motion.div>
+
+        {/* Scroll indicator */}
+        <motion.div
+          style={{
+            position: "absolute",
+            bottom: "5%",
+            left: "50%",
+            transform: "translateX(-50%)",
+            fontSize: "2rem",
+            color: "#FFD700",
+          }}
+          animate={{ y: [0, 20, 0] }}
+          transition={{ repeat: Infinity, duration: 2 }}>
+          ↓
+        </motion.div>
+      </motion.div>
+
+      {/* Overlay gradient */}
+      <motion.div
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: "linear-gradient(to bottom, transparent 70%, #000 90%)",
+          pointerEvents: "none",
+          zIndex: 3,
+        }}
+      />
+    </motion.section>
   );
 };
-
-const styles = {
-  hero: {
-    position: "relative",
-    height: "100vh",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    textAlign: "center",
-    overflow: "hidden",
-  },
-  background: {
-    position: "absolute",
-    width: "100%",
-    height: "100%",
-    backgroundImage:
-      'url("https://images.unsplash.com/photo-1568873413-ccf775f6db67?auto=format&fit=crop&w=1950&q=80")', // Replace with a real image
-    backgroundSize: "cover",
-    backgroundPosition: "center",
-    zIndex: -1,
-  },
-  content: {
-    position: "relative",
-    zIndex: 2,
-  },
-  title: {
-    fontSize: "3rem",
-    color: "#ffcc00",
-    margin: "10px 0",
-    position: "absolute",
-    width: "100%",
-  },
-};
-
-export default Hero;
